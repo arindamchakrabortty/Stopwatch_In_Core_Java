@@ -1,0 +1,146 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+class StopWatch implements ActionListener,Runnable
+{
+	JFrame frm;
+	JPanel pan1,pan2,pan3,pan4;
+	JLabel lbl1,lbl2,lbl3;
+	JButton btn1,btn2,btn3,btn4;
+	Thread th;
+	int x,y=0,z=0,m;
+	StopWatch()
+	{
+		frm=new JFrame("StopWatch");
+		pan1=new JPanel();
+		pan2=new JPanel();
+		pan3=new JPanel();
+		pan4=new JPanel();
+		lbl1=new JLabel("00");
+		lbl2=new JLabel("00");
+		lbl3=new JLabel("00");
+		btn1=new JButton("Play");
+		btn2=new JButton("Stop");
+		btn3=new JButton("Resume");
+		btn4=new JButton("Reset");
+		lbl1.setFont(new Font("Times New Roman",Font.BOLD,60));
+		lbl2.setFont(new Font("Times New Roman",Font.BOLD,60));
+		lbl3.setFont(new Font("Times New Roman",Font.BOLD,60));
+		pan1.setBackground(Color.blue);
+		pan2.setBackground(Color.green);
+		pan3.setBackground(Color.yellow);
+		frm.add(pan1,BorderLayout.WEST);
+		frm.add(pan2,BorderLayout.CENTER);
+		frm.add(pan3,BorderLayout.EAST);
+		frm.add(pan4,BorderLayout.SOUTH);
+		pan1.add(lbl1);
+		pan2.add(lbl2);
+		pan3.add(lbl3);
+		pan4.add(btn1);
+		pan4.add(btn2);
+		pan4.add(btn3);
+		pan4.add(btn4);
+		frm.setVisible(true);
+		frm.setSize(310,150);
+		frm.setResizable(false);
+		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		btn1.addActionListener(this);
+		btn2.addActionListener(this);
+		btn3.addActionListener(this);
+		btn4.addActionListener(this);
+	}
+	public void actionPerformed(ActionEvent ae)
+	{
+		if(ae.getSource()==btn1)
+		{
+			th=new Thread(this);
+			th.start();
+			btn1.setEnabled(false);
+			btn2.setEnabled(true);
+			btn3.setEnabled(true);
+			btn4.setEnabled(false);
+		}
+		else if(ae.getSource()==btn2)
+		{
+			th.suspend();
+			btn2.setEnabled(false);
+			btn1.setEnabled(false);
+			btn3.setEnabled(true);
+			btn4.setEnabled(true);
+		}
+		else if(ae.getSource()==btn3)
+		{
+			th.resume();
+			btn2.setEnabled(true);
+			btn3.setEnabled(false);
+			btn4.setEnabled(false);
+		}
+		else if(ae.getSource()==btn4)
+		{
+			x=0;
+			y=0;
+			z=0;
+			String str=(x<10?"0":" ");
+			String str1=(y<10?"0":" ");
+			String str2=(z<10?"0":" ");
+			lbl2.setText(str1+y);
+			lbl3.setText(str+x);
+			lbl1.setText(str2+z);
+			th.suspend();
+			btn1.setEnabled(true);
+			btn2.setEnabled(false);
+			btn3.setEnabled(false);
+			btn4.setEnabled(false);
+		}
+	}
+	public void run()
+	{
+		for(m=1;m>0;m++)
+		{
+		
+			for(x=1;x<=60;x++)
+			{
+				try
+			{
+				Thread.sleep(1000);
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+				String str=(x<10?"0":" ");
+				lbl3.setText(str+x);
+			}
+			if(x>60)
+			{
+				
+				y=1;
+				x=0;
+				String str=(x<10?"0":" ");
+				String str1=(y<10?"0":" ");
+				lbl2.setText(str1+y);
+				lbl3.setText(str+x);
+				y++;
+			}
+			if(y>60)
+			{
+				x=0;
+				y=0;
+				z=0;
+				String str=(x<10?"0":" ");
+				String str1=(y<10?"0":" ");
+				String str2=(z<10?"0":" ");
+				lbl2.setText(str1+y);
+				lbl3.setText(str+x);
+				lbl1.setText(str2+z);
+				z++;
+			}
+				
+		}
+		
+	}
+	public static void main(String[] args)
+	{
+		new StopWatch();
+	}
+}
